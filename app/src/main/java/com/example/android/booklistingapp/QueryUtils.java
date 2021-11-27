@@ -11,6 +11,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -23,7 +24,7 @@ public class QueryUtils {
     /** Tag for the log messages */
     private static final String LOG_TAG = QueryUtils.class.getSimpleName();
 
-    public static String extractFeatureFromJson(String bookJSON) {
+    public static List<Book> extractFeatureFromJson(String bookJSON) {
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(bookJSON)) {
             return null;
@@ -31,6 +32,10 @@ public class QueryUtils {
 
         String resJson = "";
 
+        // Create an empty ArrayList that we can start adding earthquakes to
+        List<Book> booksArrayList = new ArrayList<Book>();
+
+        Book bookObject = new Book();
 
         try {
 
@@ -39,12 +44,55 @@ public class QueryUtils {
 
             JSONArray itemsArray = baseJsonResponse.getJSONArray("items");
 
-            JSONObject currentItem = itemsArray.getJSONObject(0);
+            for(int loopIndex = 0 ; loopIndex < itemsArray.length() ; loopIndex++){
 
-            JSONObject volumeItem = currentItem.getJSONObject("volumeInfo");
+                JSONObject firstItem = itemsArray.getJSONObject(loopIndex);
+                String idString = firstItem.getString("id");
 
-            String titleString = volumeItem.getString("title");
-            resJson = titleString;
+                JSONObject volumeInfo = firstItem.getJSONObject("volumeInfo");
+
+                String titleString = volumeInfo.getString("title");
+
+                JSONArray authorsJsonArray;
+                ArrayList<String> authorsList = new ArrayList<String>();
+                String emptyString = "---";
+
+                if(volumeInfo.has("authors")){
+                    authorsJsonArray = volumeInfo.getJSONArray("authors");
+                    for(int i = 0 ; i < authorsJsonArray.length() ; i++){
+                        //System.out.println("author: " + authorsJsonArray.getString(i));
+                        authorsList.add(authorsJsonArray.getString(i));
+                    }
+                }
+                else{
+                    authorsList.add(emptyString);
+                }
+
+                String publishDateString = "";
+                if(volumeInfo.has("publishedDate")){
+                    publishDateString = volumeInfo.getString("publishedDate");
+                }
+                else{
+                    publishDateString = "---";
+                }
+
+
+                String languageString = volumeInfo.getString("language");
+
+                JSONObject imageLinksJson = volumeInfo.getJSONObject("imageLinks");
+                String imageLinkString = imageLinksJson.getString("smallThumbnail");
+
+                bookObject.setBookID(idString);
+                bookObject.setBookTitle(titleString);
+                bookObject.setBookAuthorsList(authorsList);
+                bookObject.setBookPublishDate(publishDateString);
+                bookObject.setBookLanguage(languageString);
+                bookObject.setImageLinkSmallThumbnail(imageLinkString);
+
+                booksArrayList.add(bookObject);
+
+            }
+
 
         } catch (JSONException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
@@ -53,10 +101,10 @@ public class QueryUtils {
             Log.e("QueryUtils", "Problem parsing the earthquake JSON results", e);
         }
 
-        return resJson;
+        return booksArrayList;
     }
 
-    public static String fetchEarthquakeData(String requestUrl) {
+    public static List<Book> fetchEarthquakeData(String requestUrl) {
 
         try {
             Thread.sleep(2000);
@@ -75,9 +123,9 @@ public class QueryUtils {
             Log.e(LOG_TAG, "Problem making the HTTP request.", e);
         }
 
-        String book = extractFeatureFromJson(jsonResponse);
+        List<Book> booksArrayList = extractFeatureFromJson(jsonResponse);
 
-        return book;
+        return booksArrayList;
     }
 
     /**
