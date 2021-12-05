@@ -66,7 +66,6 @@ public class QueryUtils {
                 if(volumeInfo.has("authors")){
                     authorsJsonArray = volumeInfo.getJSONArray("authors");
                     for(int i = 0 ; i < authorsJsonArray.length() ; i++){
-                        //System.out.println("author: " + authorsJsonArray.getString(i));
                         authorsList.add(authorsJsonArray.getString(i));
                     }
                 }
@@ -102,19 +101,6 @@ public class QueryUtils {
                 bookObject.setBookLanguage(languageString);
                 bookObject.setImageLinkSmallThumbnail(imageLinkString);
 
-                /*
-                Drawable drawable = null;
-                if(imageLinkString.equalsIgnoreCase("---")){
-                    drawable = Drawable.createFromStream((InputStream) new
-                            URL("https://upload.wikimedia.org/wikipedia/commons/3/39/Book.svg").getContent(), "src");
-
-                }
-                else{
-                    //drawable = Drawable.createFromStream((InputStream) new URL(imageLinkString).getContent(), "src");
-                    drawable = Drawable.createFromStream((InputStream) new
-                            URL("https://upload.wikimedia.org/wikipedia/commons/3/39/Book.svg").getContent(), "src");
-                }
-                */
 
                 String imageUrl = "";
 
@@ -132,12 +118,9 @@ public class QueryUtils {
                 bitmap = BitmapFactory.decodeStream(in);
                 bookObject.setBitmap(bitmap);
 
-                //bookObject.setImageDrawable(drawable);
-
                 booksArrayList.add(bookObject);
 
             }
-
 
         } catch (JSONException | MalformedURLException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,

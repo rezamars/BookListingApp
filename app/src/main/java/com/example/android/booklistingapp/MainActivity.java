@@ -117,29 +117,7 @@ public class MainActivity extends AppCompatActivity
         if(booksArrayList.isEmpty()||booksArrayList == null){
             System.out.println("booksArrayList is empty!" );
         }
-        else{
-            System.out.println("arraysize= " + booksArrayList.size());
 
-            for(int p = 0 ; p < booksArrayList.size() ; p++){
-
-            }
-
-            /*
-            int index = 3;
-
-            System.out.println("---------------------------");
-            System.out.println("BookId: " + booksArrayList.get(index).getBookID());
-            System.out.println("BookTitle: " + booksArrayList.get(index).getBookTitle());
-            for(int i = 0 ; i < booksArrayList.get(index).getBookAuthorsList().size() ; i++){
-                System.out.println("Author " + i + ": " + booksArrayList.get(index).getBookAuthorsList().get(i));
-            }
-
-            System.out.println("Published date: " + booksArrayList.get(index).getBookPublishDate());
-            System.out.println("Book Language: " + booksArrayList.get(index).getBookLanguage());
-            System.out.println("ImageLink: " + booksArrayList.get(index).getImageLinkSmallThumbnail());
-            System.out.println("---------------------------");
-            */
-        }
 
         progressBar.setVisibility(View.INVISIBLE);
 
@@ -189,54 +167,6 @@ public class MainActivity extends AppCompatActivity
             }
 
             List<Book> booksArrayList = QueryUtils.fetchEarthquakeData(APIQuery);
-
-            /*
-            drawableList = new ArrayList<Drawable>();
-
-            for(int i = 0 ; i < booksArrayList.size() ; i++){
-
-                URL myUrl = null;
-                Drawable drawable = null;
-
-                try {
-                    if(booksArrayList.get(i).getImageLinkSmallThumbnail().equalsIgnoreCase("---")){
-                        myUrl = new URL("https://upload.wikimedia.org/wikipedia/commons/3/39/Book.svg");
-
-                    }
-                    //myUrl = new URL(booksArrayList.get(i).getImageLinkSmallThumbnail());
-                    myUrl = new URL("https://upload.wikimedia.org/wikipedia/commons/3/39/Book.svg");
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                InputStream inputStream = null;
-                try {
-                    inputStream = (InputStream)myUrl.getContent();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                drawable = Drawable.createFromStream(inputStream, "src");
-                drawableList.add(drawable);
-            }
-            */
-
-            /*
-            Drawable drawable = null;
-            for(int w = 0 ; w < booksArrayList.size() ; w++){
-                try {
-                     drawable = Drawable.createFromStream((InputStream) new
-                            URL(booksArrayList.get(w).getImageLinkSmallThumbnail()).getContent(), "src");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(booksArrayList.get(w).getImageLinkSmallThumbnail().equalsIgnoreCase("---")){
-                    //booksArrayList.get(w).setImageDrawable(R.drawable.baseline_library_books_black_48);
-                }
-                else{
-                    booksArrayList.get(w).setImageDrawable(drawable);
-                }
-
-            }
-            */
 
             return booksArrayList;
         }
