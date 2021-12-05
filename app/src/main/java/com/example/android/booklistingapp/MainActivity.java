@@ -11,12 +11,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -119,7 +121,7 @@ public class MainActivity extends AppCompatActivity
             System.out.println("arraysize= " + booksArrayList.size());
 
             for(int p = 0 ; p < booksArrayList.size() ; p++){
-                //System.out.println(p + ": " + "aaaaaaaaaaaaaaaaaaa....BookTitle: " + booksArrayList.get(p).getBookTitle());
+
             }
 
             /*
@@ -165,6 +167,7 @@ public class MainActivity extends AppCompatActivity
 
     public static class BookLoader extends AsyncTaskLoader<List<Book>> {
 
+        //public static List<Drawable> drawableList;
 
         public BookLoader(Context context, String url) {
             super(context);
@@ -186,6 +189,35 @@ public class MainActivity extends AppCompatActivity
             }
 
             List<Book> booksArrayList = QueryUtils.fetchEarthquakeData(APIQuery);
+
+            /*
+            drawableList = new ArrayList<Drawable>();
+
+            for(int i = 0 ; i < booksArrayList.size() ; i++){
+
+                URL myUrl = null;
+                Drawable drawable = null;
+
+                try {
+                    if(booksArrayList.get(i).getImageLinkSmallThumbnail().equalsIgnoreCase("---")){
+                        myUrl = new URL("https://upload.wikimedia.org/wikipedia/commons/3/39/Book.svg");
+
+                    }
+                    //myUrl = new URL(booksArrayList.get(i).getImageLinkSmallThumbnail());
+                    myUrl = new URL("https://upload.wikimedia.org/wikipedia/commons/3/39/Book.svg");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                InputStream inputStream = null;
+                try {
+                    inputStream = (InputStream)myUrl.getContent();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                drawable = Drawable.createFromStream(inputStream, "src");
+                drawableList.add(drawable);
+            }
+            */
 
             /*
             Drawable drawable = null;

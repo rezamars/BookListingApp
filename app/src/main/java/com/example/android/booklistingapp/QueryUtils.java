@@ -1,5 +1,7 @@
 package com.example.android.booklistingapp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -101,15 +103,35 @@ public class QueryUtils {
                 bookObject.setImageLinkSmallThumbnail(imageLinkString);
 
                 /*
+                Drawable drawable = null;
                 if(imageLinkString.equalsIgnoreCase("---")){
-                    Drawable drawable = Drawable.createFromStream((InputStream) new
-                            URL("https://www.shutterstock.com/sv/image-vector/book-icon-vector-illustration-on-white-584164636").getContent(), "src");
+                    drawable = Drawable.createFromStream((InputStream) new
+                            URL("https://upload.wikimedia.org/wikipedia/commons/3/39/Book.svg").getContent(), "src");
 
                 }
                 else{
-                    Drawable drawable = Drawable.createFromStream((InputStream) new URL(imageLinkString).getContent(), "src");
+                    //drawable = Drawable.createFromStream((InputStream) new URL(imageLinkString).getContent(), "src");
+                    drawable = Drawable.createFromStream((InputStream) new
+                            URL("https://upload.wikimedia.org/wikipedia/commons/3/39/Book.svg").getContent(), "src");
                 }
                 */
+
+                String imageUrl = "";
+
+                if(imageLinkString.equalsIgnoreCase("---")){
+                    //imageUrl = "http://www.clker.com/cliparts/n/m/t/4/w/d/libro-gran-md.png";
+                    //imageUrl = "http://www.clker.com/cliparts/a/f/5/7/11949859662103344033old_book_lumen_design_st_01.svg.med.png";
+                    imageUrl = "https://www.clker.com/cliparts/e/8/0/e/1206580017363707510barretr_Book.svg.med.png";
+                }
+                else{
+                    imageUrl = imageLinkString;
+                }
+
+                Bitmap bitmap = null;
+                InputStream in = new java.net.URL(imageUrl).openStream();
+                bitmap = BitmapFactory.decodeStream(in);
+                bookObject.setBitmap(bitmap);
+
                 //bookObject.setImageDrawable(drawable);
 
                 booksArrayList.add(bookObject);
@@ -117,11 +139,13 @@ public class QueryUtils {
             }
 
 
-        } catch (JSONException  e) {
+        } catch (JSONException | MalformedURLException e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
             Log.e("QueryUtils", "Problem parsing the earthquake JSON results", e);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         return booksArrayList;
@@ -129,13 +153,13 @@ public class QueryUtils {
 
     public static List<Book> fetchEarthquakeData(String requestUrl) {
 
-
+        /*
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
+        */
 
         // Create URL object
         URL url = createUrl(requestUrl);

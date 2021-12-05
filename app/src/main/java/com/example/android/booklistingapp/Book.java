@@ -1,5 +1,6 @@
 package com.example.android.booklistingapp;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import java.util.ArrayList;
@@ -13,13 +14,16 @@ public class Book {
     private String bookLanguage;
     private String imageLinkSmallThumbnail;
     private Drawable drawable;
+    private Bitmap bitmap;
+
 
     public Book(){
 
     }
 
     public Book(String id, String title, ArrayList authorsList, String pubDate,
-                String language, String imageLink, Drawable drawable1){
+                String language, String imageLink, Drawable drawable1,
+                Bitmap bitmap1){
         bookID = id;
         bookTitle = title;
         bookAuthorsList = authorsList;
@@ -27,6 +31,8 @@ public class Book {
         bookLanguage = language;
         imageLinkSmallThumbnail = imageLink;
         drawable = drawable1;
+        bitmap = bitmap1;
+
     }
 
     public String getBookID() {
@@ -84,4 +90,13 @@ public class Book {
     public void setImageDrawable(Drawable drawable) {
         this.drawable = drawable;
     }
+
+    public Bitmap getBitmap() {
+        return bitmap;
+    }
+
+    public void setBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+    }
+
 }
