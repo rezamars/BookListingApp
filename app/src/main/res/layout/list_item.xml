@@ -1,0 +1,113 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="27dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center_vertical"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        tools:text="--" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="8sp"
+                android:text="Booktitle: " />
+
+            <TextView
+                android:id="@+id/booktitle_text_view"
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:textStyle="bold"
+                android:singleLine="false"
+                android:textSize="10sp"
+                tools:text="" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1.2"
+                android:layout_height="wrap_content"
+                android:paddingLeft="4dp"
+                android:paddingRight="2dp"
+                android:maxLines="3"
+                android:singleLine="false"
+                android:textSize="8sp"
+                android:text="Publish date: " />
+
+            <TextView
+                android:id="@+id/pubdate_text_view"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="8sp"
+                tools:text="" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="8sp"
+                android:text="Author: " />
+
+            <TextView
+                android:id="@+id/author_text_view"
+                android:layout_width="0dp"
+                android:layout_weight="4"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:singleLine="false"
+                android:textSize="8sp"
+                tools:text="" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1.2"
+                android:layout_height="wrap_content"
+                android:paddingLeft="4dp"
+                android:paddingRight="2dp"
+                android:textSize="8sp"
+                android:text="Language: " />
+
+            <TextView
+                android:id="@+id/language_text_view"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textSize="8sp"
+                tools:text="" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

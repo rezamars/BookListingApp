@@ -1,5 +1,6 @@
 package com.example.android.booklistingapp;
 
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -35,7 +36,7 @@ public class QueryUtils {
         // Create an empty ArrayList that we can start adding earthquakes to
         List<Book> booksArrayList = new ArrayList<Book>();
 
-        Book bookObject = new Book();
+        Book bookObject;
 
         try {
 
@@ -46,7 +47,10 @@ public class QueryUtils {
 
             for(int loopIndex = 0 ; loopIndex < itemsArray.length() ; loopIndex++){
 
+                bookObject = new Book();
+
                 JSONObject firstItem = itemsArray.getJSONObject(loopIndex);
+
                 String idString = firstItem.getString("id");
 
                 JSONObject volumeInfo = firstItem.getJSONObject("volumeInfo");
@@ -76,11 +80,18 @@ public class QueryUtils {
                     publishDateString = "---";
                 }
 
-
                 String languageString = volumeInfo.getString("language");
 
-                JSONObject imageLinksJson = volumeInfo.getJSONObject("imageLinks");
-                String imageLinkString = imageLinksJson.getString("smallThumbnail");
+                String imageLinkString = "";
+
+                if(volumeInfo.has("imageLinks")){
+                    JSONObject imageLinksJson = volumeInfo.getJSONObject("imageLinks");
+                    imageLinkString = imageLinksJson.getString("smallThumbnail");
+                }
+                else{
+                    imageLinkString = "---";
+                }
+
 
                 bookObject.setBookID(idString);
                 bookObject.setBookTitle(titleString);
@@ -89,12 +100,24 @@ public class QueryUtils {
                 bookObject.setBookLanguage(languageString);
                 bookObject.setImageLinkSmallThumbnail(imageLinkString);
 
+                /*
+                if(imageLinkString.equalsIgnoreCase("---")){
+                    Drawable drawable = Drawable.createFromStream((InputStream) new
+                            URL("https://www.shutterstock.com/sv/image-vector/book-icon-vector-illustration-on-white-584164636").getContent(), "src");
+
+                }
+                else{
+                    Drawable drawable = Drawable.createFromStream((InputStream) new URL(imageLinkString).getContent(), "src");
+                }
+                */
+                //bookObject.setImageDrawable(drawable);
+
                 booksArrayList.add(bookObject);
 
             }
 
 
-        } catch (JSONException e) {
+        } catch (JSONException  e) {
             // If an error is thrown when executing any of the above statements in the "try" block,
             // catch the exception here, so the app doesn't crash. Print a log message
             // with the message from the exception.
@@ -106,11 +129,13 @@ public class QueryUtils {
 
     public static List<Book> fetchEarthquakeData(String requestUrl) {
 
+
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
 
         // Create URL object
         URL url = createUrl(requestUrl);
