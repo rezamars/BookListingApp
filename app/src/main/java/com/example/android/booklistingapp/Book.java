@@ -13,7 +13,6 @@ public class Book {
     private String bookPublishDate;
     private String bookLanguage;
     private String imageLinkSmallThumbnail;
-    private Drawable drawable;
     private Bitmap bitmap;
 
 
@@ -22,7 +21,7 @@ public class Book {
     }
 
     public Book(String id, String title, ArrayList authorsList, String pubDate,
-                String language, String imageLink, Drawable drawable1,
+                String language, String imageLink,
                 Bitmap bitmap1){
         bookID = id;
         bookTitle = title;
@@ -30,7 +29,6 @@ public class Book {
         bookPublishDate = pubDate;
         bookLanguage = language;
         imageLinkSmallThumbnail = imageLink;
-        drawable = drawable1;
         bitmap = bitmap1;
 
     }
@@ -81,14 +79,6 @@ public class Book {
 
     public void setImageLinkSmallThumbnail(String imageLinkSmallThumbnail) {
         this.imageLinkSmallThumbnail = imageLinkSmallThumbnail;
-    }
-
-    public Drawable getDrawable() {
-        return drawable;
-    }
-
-    public void setImageDrawable(Drawable drawable) {
-        this.drawable = drawable;
     }
 
     public Bitmap getBitmap() {

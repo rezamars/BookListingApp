@@ -6,6 +6,7 @@ import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Loader;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -33,8 +34,7 @@ public class MainActivity extends AppCompatActivity
     private LoaderManager loaderManager;
 
     /** Adapter for the list of books */
-    private BookAdapter mAdapter;
-
+    public BookAdapter mAdapter;
 
     /** TextView that is displayed when the list is empty */
     private TextView mEmptyStateTextView;
@@ -48,17 +48,7 @@ public class MainActivity extends AppCompatActivity
 
         progressBar = (ProgressBar) findViewById(R.id.loading_spinner);
         progressBar.setVisibility(View.INVISIBLE);
-    }
 
-    public void startSearch(View textView){
-
-        progressBar.setVisibility(View.VISIBLE);
-
-        TextView searchTextView = findViewById(R.id.searchText);
-        searchTextString = searchTextView.getText().toString();
-
-        APIQuery = "https://www.googleapis.com/books/v1/volumes?q=" +
-                searchTextString + "&maxResults=40";
 
         ConnectivityManager cm =
                 (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -66,11 +56,6 @@ public class MainActivity extends AppCompatActivity
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
-
-        if(loaderManager != null){
-            loaderManager.getLoader(1).reset();
-            loaderManager.destroyLoader(1);
-        }
 
 
         if(isConnected){
@@ -81,7 +66,6 @@ public class MainActivity extends AppCompatActivity
             // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
             // because this activity implements the LoaderCallbacks interface).
             loaderManager.initLoader(1, null, this);
-
         }
         else{
             System.out.println("ERROR ! No network connection." );
@@ -101,29 +85,49 @@ public class MainActivity extends AppCompatActivity
         // so the list can be populated in the user interface
         bookListView.setAdapter(mAdapter);
 
+    }
+
+
+    public void startSearch(View textView){
+
+
+        loaderManager.getLoader(1).reset();
+        loaderManager.destroyLoader(1);
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        TextView searchTextView = findViewById(R.id.searchText);
+        searchTextString = searchTextView.getText().toString();
+
+        APIQuery = "https://www.googleapis.com/books/v1/volumes?q=" +
+                searchTextString + "&maxResults=40";
+
+        loaderManager.initLoader(1, null, this).forceLoad();
 
     }
 
     @Override
     public Loader<List<Book>> onCreateLoader(int i, Bundle bundle) {
         // Create a new loader for the given URL
-        return new BookLoader(this, APIQuery);
+        return new BookLoader(MainActivity.this);
     }
 
 
     @Override
     public void onLoadFinished(Loader<List<Book>> loader, List<Book> booksArrayList) {
 
-        if(booksArrayList.isEmpty()||booksArrayList == null){
-            System.out.println("booksArrayList is empty!" );
+        if(booksArrayList == null){
+            return;
         }
-
 
         progressBar.setVisibility(View.INVISIBLE);
 
 
-        // Clear the adapter of previous earthquake data
-        mAdapter.clear();
+        if(mAdapter != null){
+            // Clear the adapter of previous book data
+            mAdapter.clear();
+        }
+
 
         // If there is a valid list of {@link Books}s, then add them to the adapter's
         // data set. This will trigger the ListView to update.
@@ -147,7 +151,7 @@ public class MainActivity extends AppCompatActivity
 
         //public static List<Drawable> drawableList;
 
-        public BookLoader(Context context, String url) {
+        public BookLoader(Context context) {
             super(context);
         }
 
@@ -165,6 +169,7 @@ public class MainActivity extends AppCompatActivity
             if (APIQuery == null) {
                 return null;
             }
+
 
             List<Book> booksArrayList = QueryUtils.fetchEarthquakeData(APIQuery);
 
