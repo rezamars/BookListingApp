@@ -5,13 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.LoaderManager;
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -84,6 +87,32 @@ public class MainActivity extends AppCompatActivity
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         bookListView.setAdapter(mAdapter);
+
+        // Set an item click listener on the ListView, which sends an intent to a web browser
+        // to open a website with more information about the selected earthquake.
+        bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                // Find the current earthquake that was clicked on
+                Book currentBook = mAdapter.getItem(position);
+
+                if(currentBook.getInfoLink().equalsIgnoreCase("---")){
+                    return;
+                }
+                else{
+                    // Convert the String URL into a URI object (to pass into the Intent constructor)
+                    Uri BookUri = Uri.parse(currentBook.getInfoLink());
+
+                    // Create a new intent to view the earthquake URI
+                    Intent websiteIntent = new Intent(Intent.ACTION_VIEW, BookUri);
+
+                    // Send the intent to launch a new activity
+                    startActivity(websiteIntent);
+                }
+
+
+            }
+        });
 
     }
 

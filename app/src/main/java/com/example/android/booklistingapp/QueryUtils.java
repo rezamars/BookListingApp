@@ -83,6 +83,15 @@ public class QueryUtils {
 
                 String languageString = volumeInfo.getString("language");
 
+                String infoLink = "";
+                if(volumeInfo.has("infoLink")){
+                    infoLink = volumeInfo.getString("infoLink");
+                }
+                else{
+                    infoLink = "---";
+                }
+
+
                 String imageLinkString = "";
 
                 if(volumeInfo.has("imageLinks")){
@@ -99,6 +108,7 @@ public class QueryUtils {
                 bookObject.setBookAuthorsList(authorsList);
                 bookObject.setBookPublishDate(publishDateString);
                 bookObject.setBookLanguage(languageString);
+                bookObject.setInfoLink(infoLink);
                 bookObject.setImageLinkSmallThumbnail(imageLinkString);
 
 

@@ -14,6 +14,7 @@ public class Book {
     private String bookLanguage;
     private String imageLinkSmallThumbnail;
     private Bitmap bitmap;
+    private String infoLink;
 
 
     public Book(){
@@ -22,7 +23,7 @@ public class Book {
 
     public Book(String id, String title, ArrayList authorsList, String pubDate,
                 String language, String imageLink,
-                Bitmap bitmap1){
+                Bitmap bitmap1, String infoLink1){
         bookID = id;
         bookTitle = title;
         bookAuthorsList = authorsList;
@@ -30,7 +31,7 @@ public class Book {
         bookLanguage = language;
         imageLinkSmallThumbnail = imageLink;
         bitmap = bitmap1;
-
+        infoLink = infoLink1;
     }
 
     public String getBookID() {
@@ -87,6 +88,14 @@ public class Book {
 
     public void setBitmap(Bitmap bitmap) {
         this.bitmap = bitmap;
+    }
+
+    public String getInfoLink() {
+        return infoLink;
+    }
+
+    public void setInfoLink(String infoLink1) {
+        this.infoLink = infoLink1;
     }
 
 }
