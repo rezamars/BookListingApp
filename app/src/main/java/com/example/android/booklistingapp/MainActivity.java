@@ -36,12 +36,20 @@ public class MainActivity extends AppCompatActivity
     public static String APIQuery;
     private LoaderManager loaderManager;
 
-    /** Adapter for the list of books */
+    private boolean isConnected;
+
+    /**
+     * Adapter for the list of books
+     */
     public BookAdapter mAdapter;
 
-    /** TextView that is displayed when the list is empty */
+    /**
+     * TextView that is displayed when the list is empty
+     */
     private TextView mEmptyStateTextView;
     private ProgressBar progressBar;
+
+    public static int serverRespondCode = 200;
 
 
     @Override
@@ -52,26 +60,27 @@ public class MainActivity extends AppCompatActivity
         progressBar = (ProgressBar) findViewById(R.id.loading_spinner);
         progressBar.setVisibility(View.INVISIBLE);
 
+        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
 
         ConnectivityManager cm =
-                (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
+        isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
+        // Get a reference to the LoaderManager, in order to interact with loaders.
+        loaderManager = getLoaderManager();
 
-        if(isConnected){
-            // Get a reference to the LoaderManager, in order to interact with loaders.
-            loaderManager = getLoaderManager();
+        // Initialize the loader. Pass in the int ID constant defined above and pass in null for
+        // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
+        // because this activity implements the LoaderCallbacks interface).
+        loaderManager.initLoader(1, null, this);
 
-            // Initialize the loader. Pass in the int ID constant defined above and pass in null for
-            // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
-            // because this activity implements the LoaderCallbacks interface).
-            loaderManager.initLoader(1, null, this);
-        }
-        else{
-            System.out.println("ERROR ! No network connection." );
+        if (isConnected) {
+            mEmptyStateTextView.setText("");
+        } else {
+            System.out.println("ERROR ! No network connection.");
             progressBar.setVisibility(View.GONE);
             mEmptyStateTextView.setText("No internet connection");
         }
@@ -96,10 +105,9 @@ public class MainActivity extends AppCompatActivity
                 // Find the current earthquake that was clicked on
                 Book currentBook = mAdapter.getItem(position);
 
-                if(currentBook.getInfoLink().equalsIgnoreCase("---")){
+                if (currentBook.getInfoLink().equalsIgnoreCase("---")) {
                     return;
-                }
-                else{
+                } else {
                     // Convert the String URL into a URI object (to pass into the Intent constructor)
                     Uri BookUri = Uri.parse(currentBook.getInfoLink());
 
@@ -117,21 +125,43 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    public void startSearch(View textView){
+    public void startSearch(View textView) {
 
+        serverRespondCode = 0;
 
-        loaderManager.getLoader(1).reset();
-        loaderManager.destroyLoader(1);
+        mAdapter.clear();
 
-        progressBar.setVisibility(View.VISIBLE);
+        ConnectivityManager cm =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        TextView searchTextView = findViewById(R.id.searchText);
-        searchTextString = searchTextView.getText().toString();
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
 
-        APIQuery = "https://www.googleapis.com/books/v1/volumes?q=" +
-                searchTextString + "&maxResults=40";
+        if (isConnected) {
 
-        loaderManager.initLoader(1, null, this).forceLoad();
+            mEmptyStateTextView.setText("");
+
+            loaderManager.getLoader(1).reset();
+            loaderManager.destroyLoader(1);
+
+            progressBar.setVisibility(View.VISIBLE);
+
+            TextView searchTextView = findViewById(R.id.searchText);
+            searchTextString = searchTextView.getText().toString();
+
+            APIQuery = "https://www.googleapis.com/books/v1/volumes?q=" +
+                    searchTextString + "&maxResults=40";
+
+            loaderManager.initLoader(1, null, this).forceLoad();
+
+        } else {
+            System.out.println("ERROR ! No network connection.");
+            progressBar.setVisibility(View.GONE);
+            mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+            mEmptyStateTextView.setText("No internet connection");
+        }
+
 
     }
 
@@ -145,14 +175,21 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onLoadFinished(Loader<List<Book>> loader, List<Book> booksArrayList) {
 
-        if(booksArrayList == null){
+        if (serverRespondCode == 200) {
+            mEmptyStateTextView.setText("");
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
+            mEmptyStateTextView.setText("No or bad server response!");
+        }
+
+        if (booksArrayList == null) {
             return;
         }
 
         progressBar.setVisibility(View.INVISIBLE);
 
 
-        if(mAdapter != null){
+        if (mAdapter != null) {
             // Clear the adapter of previous book data
             mAdapter.clear();
         }
@@ -162,8 +199,7 @@ public class MainActivity extends AppCompatActivity
         // data set. This will trigger the ListView to update.
         if (booksArrayList != null && !booksArrayList.isEmpty()) {
             mAdapter.addAll(booksArrayList);
-        }
-        else{
+        } else {
             // Set empty state text to display "No books found."
             mEmptyStateTextView.setText("No books found!");
         }
@@ -198,7 +234,6 @@ public class MainActivity extends AppCompatActivity
             if (APIQuery == null) {
                 return null;
             }
-
 
             List<Book> booksArrayList = QueryUtils.fetchEarthquakeData(APIQuery);
 

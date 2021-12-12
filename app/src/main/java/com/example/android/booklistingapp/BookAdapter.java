@@ -70,7 +70,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
         else{
             if(currentBook.getBookAuthorsList().size()>1){
                 for(int i = 0 ; i < currentBook.getBookAuthorsList().size() ; i++){
-                    authors = authors + currentBook.getBookAuthorsList().get(i).toString() + ", ";
+                    authors = authors + currentBook.getBookAuthorsList().get(i) + ", ";
                 }
             }
             else{
